@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ittest.springdemo.mybatis.mapper.BillMapper">
+
+    <resultMap id="bill" type="com.ittest.springdemo.entities.Bill">
+        <id column="bid" property="bid" />
+        <result column="bill_code" property="billCode"/>
+        <result column="bill_name" property="billName"/>
+        <result column="bill_com" property="billCom"/>
+        <result column="bill_num" property="billNum"/>
+        <result column="money" property="money"/>
+        <result column="pay" property="pay"/>
+        <result column="create_date" property="createDate"/>
+        <result column="pid" property="pid"/>
+        <association property="provider" javaType="com.ittest.springdemo.entities.Provider">
+            <id column="pid" property="pid"/>
+            <result column="providerName" property="providerName"/>
+        </association>
+    </resultMap>
+    <select id="getBillByBid" resultMap="bill">
+        select b.*,p.providerName from  bill b  left join provider p on b.pid = p.pid
+        where 1=1
+        <if test="bid != null">
+            AND bid = #{bid}
+        </if>
+    </select>
+
+    <select id="getBills" resultMap="bill">
+        select b.*,p.providerName from  bill b  left join provider p on b.pid = p.pid
+        <where>
+            <if test="billName != null and billName != ''">
+              b.bill_name like '%${billName}%'
+            </if>
+            <if test="pid !=null">
+              and p.pid = #{pid}
+            </if>
+            <if test="pay !=null">
+              and b.pay = #{pay}
+            </if>
+        </where>
+    </select>
+
+    <insert id="addBill" parameterType="com.ittest.springdemo.entities.Bill">
+        <selectKey keyProperty="bid" resultType="Integer" order="AFTER">
+            select  last_insert_id()
+        </selectKey>
+        insert into bill(bill_code,bill_name,bill_com,bill_num,money,pay,pid,create_date)
+          values (#{billCode},#{billName},#{billCom},#{billNum},#{money},#{pay},#{pid},now())
+    </insert>
+
+    <update id="updateBill">
+        update bill set bill_code=#{billCode},bill_name=#{billName},bill_com=#{billCom},bill_num=#{billNum},
+          money=#{money},pay = #{pay},pid=#{pid},create_date=now()
+        where bid = #{bid}
+    </update>
+
+    <delete id="deleteBillByBid">
+        delete from bill where bid=#{bid}
+    </delete>
+</mapper>

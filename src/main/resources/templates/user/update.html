@@ -1,0 +1,74 @@
+﻿<!DOCTYPE html>
+<html  lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head lang="en" th:replace="main/public.html :: #public_head">
+</head>
+<body>
+<!--头部-->
+<header class="publicHeader" th:replace="main/public.html :: #public_header">
+</header>
+<!--时间-->
+<section class="publicTime" th:replace="main/public.html :: #public_time">
+</section>
+<!--主体内容-->
+<section class="publicMian ">
+    <div class="left" th:replace="main/public.html :: #public_left(activeUrl='user')">
+    </div>
+    <div class="right">
+        <div class="location">
+            <strong>你现在所在的位置是:</strong>
+            <span>用户管理页面 >> 用户修改页面</span>
+        </div>
+        <div class="providerAdd">
+            <form action="#" th:action="@{/user}" th:method="post" id="userForm">
+                <!--div的class 为error是验证错误，ok是验证成功-->
+                <input th:type="hidden" name="_method" th:value="put"/>
+                <input th:type="hidden" name="id" th:value="${user.getId()}"/>
+                <input th:type="hidden" name="password" th:value="${user.getPassword()}">
+                <div>
+                    <label for="realName">真实姓名：</label>
+                    <input type="text" name="realName" id="realName" placeholder="韩露" th:value="${user.getRealName()}"/>
+                    <span >*</span>
+                </div>
+                <div>
+                    <label for="username">用户名：</label>
+                    <input type="text" name="username" id="username" placeholder="韩露" th:value="${user.getUsername()}"/>
+                    <span >*</span>
+                </div>
+
+                <div>
+                    <label >用户性别：</label>
+
+                    <select name="gender">
+                        <option value="1" th:selected="${user.getGender() == 1}">女</option>
+                        <option value="2" selected th:selected="${user.getGender() == 2}">男</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="birthday">出生日期：</label>
+                    <input type="text" name="birthday" id="birthday" placeholder="2016年2月1日" th:value="${#dates.format(user.getBirthday(),'yyyy-MM-dd')}"/>
+                    <span >*</span>
+                </div>
+                <div>
+                    <label >用户类别：</label>
+                    <input type="radio" name="userType" value="1" th:checked="${user.getUserType() == 1}"/>管理员
+                    <input type="radio" name="userType" value="2" th:checked="${user.getUserType() == 2}"/>经理
+                    <input type="radio" name="userType" value="3" th:checked="${user.getUserType() == 3}"/>普通用户
+                </div>
+                <div class="providerAddBtn">
+                    <a href="#" onclick="$('#userForm').submit()">保存</a>
+                    <a href="userList.html" th:href="@{/users}">返回</a>
+                </div>
+            </form>
+        </div>
+
+    </div>
+</section>
+<footer class="footer" th:replace="main/public.html :: #public_footer">
+</footer>
+
+<script src="../js/jquery.js"></script>
+<script src="../js/js.js"></script>
+<script src="../js/time.js"></script>
+</body>
+</html>

@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>4xx错误</title>
+</head>
+<body>
+    <P>4xx类型的服务错误展示页面</P>
+    <!--获取系统的错误信息-->
+    <p>[[${message}]]</p>
+    <p>[[${timestamp}]]</p>
+    <p>[[${status}]]</p>
+    <p>[[${exception}]]</p>
+    <p>[[${error}]]</p>
+    <!--获取自定义的错误信息-->
+    <p>[[${company}]]</p>
+</body>
+</html>

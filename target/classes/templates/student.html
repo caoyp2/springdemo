@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <table border="1">
+        <tr>
+            <td>编号</td>
+            <td>姓名</td>
+            <td>性别</td>
+            <td>总数</td>
+            <td>偶数/奇数</td>
+            <td>first</td>
+            <td>last</td>
+        </tr>
+        <!--
+            user : 第1个值,代表每次迭代出对象,名字任意取
+            iterStat : 第2个值,代表每次迭代器内置对象, 名字任意取, 并有如下属性:
+            index : 当前迭代下标 0 开始
+            count : 当前迭代下标 1 开始
+            size : 获取总记录数
+            current : 当前迭代出的对象
+            even/odd : 当前迭代是偶数还是奇数 (1开始算,返回布尔值)
+            first : 当前是否为第一个元素
+            last : 当前是否为最后一个元素
+        -->
+        <tr th:each="user,itemlist : ${userlist}">
+            <td th:text="${itemlist.count}"></td>
+            <td th:text="${user.name}"></td>
+            <td th:text="${user.gender == 1 ? '男' : '女'}"></td>
+            <td th:text="${itemlist.size}"></td>
+            <td th:text="${itemlist.even == true ? '奇数' : '偶数'}"></td>
+            <td th:text="${itemlist.first}"></td>
+            <td th:text="${itemlist.last}"></td>
+        </tr>
+    </table>
+
+    <ul>
+        <li th:each="user1 : ${userlist}" th:text="${user1.name}"></li>
+    </ul>
+
+
+
+    <!--
+        th:if 不仅判断返回为 true 的表达式，还判断一些特殊的表达式。
+        如果值不是Null, 以下情况均返回 true：
+            如果值是boolean类型并且值为true.
+            如果值是数值类型并且值不为0.
+            如果值是字符类型并且值不为空.
+            如果值是字符串并且内容不为 “false” , “off” 或者 “no” .
+            如果值不是上述类型也返回true.
+        如果值是NULL, 则返回false
+        th:unless 和th:if相反
+    -->
+    <!--判断list集合是否为空，isEmpty返回true就展示，返回false就不展示-->
+    <p th:if="not ${#lists.isEmpty(userlist)}">判断list集合是否为空</p>
+    <p th:if="${5}">表达式判断</p>
+
+    <!--
+        th:swith 用法和switch类似
+        th:case  用法类似case
+    -->
+    <div th:switch="${sex}">
+        <p th:case="1">男</p>
+        <p th:case="2">女</p>
+        <p th:case="*">未知</p>
+    </div>
+
+    <!--th:object属性可以获取对象值-->
+    <div th:object="${userobj}">
+        <!--th:object获取到对象数据后，可以直接使用*{name}获取对象的属性数据-->
+        <p th:text="*{name}"></p>
+        <p th:text="*{gender}"></p>
+    </div>
+
+    <!--添加热部署依赖-->
+    <div>测试热部署组件</div>
+</body>
+</html>

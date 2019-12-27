@@ -1,0 +1,10 @@
+springboot默认的静态资源文件的存放路径
+
+classpath:/META-INF/resources/
+classpath:/resources/
+classpath:/static/
+classpath:/public/
+/: 当前项目根路径下（即resource文件夹下）
+
+
+

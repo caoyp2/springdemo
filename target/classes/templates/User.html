@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>用户demo</title>
+</head>
+<body>
+    <table border="1">
+        <tr>
+            <td>编号</td>
+            <td>姓名</td>
+            <td>性别</td>
+            <td>奇偶数</td>
+        </tr>
+        <!--
+           user : 第1个值,代表每次迭代出对象,名字任意取
+           iterStat : 第2个值,代表每次迭代器内置对象, 名字任意取, 并有如下属性:
+           index : 当前迭代下标 0 开始
+           count : 当前迭代下标 1 开始
+           size : 获取总记录数
+           current : 当前迭代出的对象
+           even/odd : 当前迭代是偶数还是奇数 (1开始算,返回布尔值)
+           first : 当前是否为第一个元素
+           last : 当前是否为最后一个元素
+       -->
+        <tr th:each="users,itemlist : ${userlist}">
+            <td th:text="${itemlist.count}"></td>
+            <td th:text="${users.name}"></td>
+            <td th:text="${users.gender == 1 ? '男' : '女'}"></td>
+            <td th:text="${itemlist.even ? '奇数': '偶数'}"></td>
+        </tr>
+    </table>
+
+    <ul>
+        <!--在一个标签上即做循环，又做赋值-->
+        <li th:each="users01 : ${userlist}" th:text="${users01.name}"></li>
+    </ul>
+
+    <!--
+           th:if 不仅判断返回为 true 的表达式，还判断一些特殊的表达式。
+           如果值不是Null, 以下情况均返回 true：
+               如果值是boolean类型并且值为true.
+               如果值是数值类型并且值不为0.
+               如果值是字符类型并且值不为空.
+               如果值是字符串并且内容不为 “false” , “off” 或者 “no” .
+               如果值不是上述类型也返回true.
+           如果值是NULL, 则返回false
+           th:unless 和th:if相反
+       -->
+
+    <!--th:if结果为true则展示出来，为false则隐藏-->
+    <p th:if="not ${#lists.isEmpty(userlist)}">判断list表达式是否为空</p>
+
+     <div th:switch="${userobj.gender}">th:switch和th:case的用法
+         <div th:case="1">男</div>
+         <div th:case="2">女</div>
+         <div th:case="*">未知</div>
+     </div>
+
+    <div th:object="${userobj}">th:object的用法
+        <div th:text="*{name}"></div>
+        <div th:text="*{gender}"></div>
+    </div>
+
+    <!--不转义特殊字符-->
+    <div th:text="${text}"></div>
+    <!--转义内容中的特殊字符-->
+    <div th:utext="${text}"></div>
+</body>
+</html>

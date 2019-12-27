@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ittest.springdemo.mybatis.mapper.ProviderMapper">
+
+    <select id="getProviderByPid" resultType="com.ittest.springdemo.entities.Provider">
+      select * from provider where pid=#{pid}
+    </select>
+
+    <select id="getProvidersAll" resultType="com.ittest.springdemo.entities.Provider">
+      select * from provider where 1=1
+      <if test="providerName != null and providerName != ''">
+        and providerName like '%${providerName}%'
+      </if>
+    </select>
+
+    <insert id="addProvider">
+--       selectKey是将id返回到对象属性的pid中，需通过属性去获取最新的id
+      <selectKey keyProperty="pid" resultType="Integer" order="AFTER">
+          select  last_insert_id()
+      </selectKey>
+      insert  into `provider` ( `provider_code`,`providerName`,`people`,`phone`,`address`,`fax`,`describe`,`create_date`)
+        values ( #{providerCode},#{providerName},#{people},#{phone},#{address},#{fax},#{describe},now())
+    </insert>
+
+    <update id="updateProvider" >
+      update `provider` set `provider_code`=#{providerCode},`providerName`=#{providerName},`people`=#{people},`phone`=#{phone},
+      `address`=#{address},`fax`=#{fax},`describe`=#{describe},`create_date`=now() where `pid`=#{pid}
+    </update>
+
+    <delete id="deleteProviderByPid">
+        delete from provider where pid=#{pid}
+    </delete>
+
+    <select id="getProviderByIdList1" resultType="com.ittest.springdemo.entities.Provider">
+      select * from provider
+      <where>
+          pid in
+--        这里idlist代表QueryProvider的属性名
+          <foreach collection="idlist" item="pid"  separator="," open="(" close=")">
+              #{pid}
+          </foreach>
+      </where>
+    </select>
+
+
+    <select id="getProviderByIdList2" resultType="com.ittest.springdemo.entities.Provider">
+        select * from provider
+        <where>
+            pid in
+--          这里list代表是list数据类型
+            <foreach collection="list" item="pid"  separator="," open="(" close=")">
+                #{pid}
+            </foreach>
+        </where>
+    </select>
+
+    <resultMap id="providerBills" type="com.ittest.springdemo.entities.Provider">
+        <result column="providerId" property="pid"/>
+        <result column="providerName" property="providerName"/>
+        <!--一对多映射，因为一个供应商可以对应多个bill-->
+        <collection property="billList" ofType="com.ittest.springdemo.entities.Bill">
+            <id column="bid" property="bid" />
+            <result column="bill_code" property="billCode"/>
+            <result column="bill_name" property="billName"/>
+            <result column="bill_com" property="billCom"/>
+            <result column="bill_num" property="billNum"/>
+            <result column="money" property="money"/>
+            <result column="pay" property="pay"/>
+            <result column="create_date" property="createDate"/>
+        </collection>
+    </resultMap>
+    <select id="getProviderBills" resultMap="providerBills">
+        select b.*,p.providerName,p.pid as providerId from provider p  left join bill b on b.pid = p.pid
+    </select>
+
+</mapper>
